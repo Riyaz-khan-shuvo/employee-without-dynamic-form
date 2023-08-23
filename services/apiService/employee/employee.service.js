@@ -1,8 +1,8 @@
 import { apiUrl } from "@/environment/environment";
 // https://localhost:7217/api/Employee/search?pageIndex=0&pageSize=10
-async function getEmployee() {
+async function getEmployee(index, size, text) {
+    const response = await fetch(`${apiUrl}/Employee/search?pageIndex=${index}&pageSize=${size}`);
     try {
-        const response = await fetch(`${apiUrl}/Employee/search?pageIndex=0&pageSize=10`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -29,7 +29,7 @@ async function getSingleEmployee(id) {
 }
 
 async function updateEmployee(id, data) {
-    
+
     try {
         const response = await fetch(`https://localhost:7217/api/Employee/${id}`, {
             method: 'PUT',
