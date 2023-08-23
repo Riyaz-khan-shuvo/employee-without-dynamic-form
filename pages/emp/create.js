@@ -73,7 +73,7 @@ const CreateEmployee = () => {
     }
 
     return (
-        <div>
+        <div className='emp-bg'>
             <section className="content">
                 <div className="container">
                     <div className="card">

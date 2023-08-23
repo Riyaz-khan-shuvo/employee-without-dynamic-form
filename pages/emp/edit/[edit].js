@@ -119,7 +119,7 @@ const EditEmp = () => {
     return (
         <div>
             {isLoading ? <p>Loading ...</p> : <>
-                <div>
+                <div className='emp-bg'>
                     <section className="content">
                         <div className="container">
                             <div className="card">
