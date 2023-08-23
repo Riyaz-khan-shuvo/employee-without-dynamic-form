@@ -1,5 +1,5 @@
 import { deleteEmployee, getEmployee, getSearchData } from '@/services/apiService/employee/employee.service';
-import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPen, faPenSquare, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -65,14 +65,16 @@ const Employee = () => {
                 <div className="container">
                     <div className="card">
                         <div className="card-header">
-                            <h1 className='display-6 mb-3'>Employee List</h1>
+                            <div className='d-flex justify-content-between align-items-center'>
+                                <div>
+                                    <h1 className='display-6 mb-3'>Employee List</h1>
+                                </div>
+                                <div>
+                                    <Link className='btn btn-outline-primary btn-sm' href={"/emp/create"}> <FontAwesomeIcon icon={faPenToSquare} />  Add Employee</Link>
+                                </div>
+                            </div>
                         </div>
                         <div className="card-body">
-
-
-                            <div>
-                                <Link href={"/emp/create"}>Add Employee</Link>
-                            </div>
                             <div className='d-flex justify-content-between my-3'>
                                 <div>
                                     <div>
