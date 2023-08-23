@@ -13,6 +13,7 @@ const Employee = () => {
         total: 0
     });
     const [pageCount, setPageCount] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
     let limit = 10;
 
     useEffect(() => {
@@ -39,12 +40,10 @@ const Employee = () => {
     };
 
     const handlePageClick = async (data) => {
-        let currentPage = data.selected;
-        const employees = await getEmployee(currentPage, limit);
-
+        const newPage = data.selected;
+        setCurrentPage(newPage);
+        const employees = await getEmployee(newPage, limit);
         setData(employees);
-        // scroll to the top
-        //window.scrollTo(0, 0)
     };
 
 
@@ -52,7 +51,7 @@ const Employee = () => {
         <div className='container mt-5' >
             <h1 className='display-6 mb-3'>Employee List</h1>
             <Link href={"/emp/create"}>Add Employee</Link>
-            <div  className='emp-table' >
+            <div className='emp-table' >
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -69,7 +68,7 @@ const Employee = () => {
                     <tbody>
                         {
                             data.data != undefined && data.data.map((da, index) => {
-                                const actualIndex = index + (pageCount * limit) + 1;
+                                const actualIndex = index + (currentPage * limit) + 1;
                                 return (
                                     <tr key={index}>
                                         <td> {actualIndex} </td>
