@@ -1,6 +1,6 @@
 import { apiUrl } from "@/environment/environment";
 // https://localhost:7217/api/Employee/search?pageIndex=0&pageSize=10
-async function getEmployee(index, size, text) {
+async function getEmployee(index, size) {
     const response = await fetch(`${apiUrl}/Employee/search?pageIndex=${index}&pageSize=${size}`);
     try {
         if (!response.ok) {
@@ -98,11 +98,28 @@ async function getAllCountry() {
     }
 }
 
+
+async function getSearchData(text) {
+    const response = await fetch(`${apiUrl}/Employee/search?pageIndex=0&pageSize=10&searchText=${text}`);
+    try {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error;
+    }
+}
+
+
 export {
     getEmployee,
     getSingleEmployee,
     updateEmployee,
     addEmployee,
     deleteEmployee,
-    getAllCountry
+    getAllCountry,
+    getSearchData
 }

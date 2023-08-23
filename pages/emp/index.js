@@ -1,4 +1,4 @@
-import { deleteEmployee, getEmployee } from '@/services/apiService/employee/employee.service';
+import { deleteEmployee, getEmployee, getSearchData } from '@/services/apiService/employee/employee.service';
 import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -23,10 +23,10 @@ const Employee = () => {
                 data: getAllData.data,
                 total: getAllData.total
             });
+            setPageCount(Math.ceil(getAllData.total / limit));
         };
         getData();
-        setPageCount(Math.ceil(data.total / limit));
-    }, [limit, data.total]);
+    }, [limit]);
 
     const handleDelete = async (id) => {
         const confirm = window.confirm("Are you sure to delete this country?")
@@ -46,11 +46,24 @@ const Employee = () => {
         setData(employees);
     };
 
+    const handleSearch = async (e) => {
+        console.log(e.target.value);
+        const empSearchData = await getSearchData(e.target.value);
+        setData(empSearchData)
+    }
 
     return (
         <div className='container mt-5' >
             <h1 className='display-6 mb-3'>Employee List</h1>
-            <Link href={"/emp/create"}>Add Employee</Link>
+            <div className='d-flex justify-content-between my-3'>
+                <div>
+                    <Link href={"/emp/create"}>Add Employee</Link>
+                </div>
+                <div>
+                    <label htmlFor="" className='me-3'> Search  </label>
+                    <input type="text" onChange={(e) => handleSearch(e)} name="search" id="" />
+                </div>
+            </div>
             <div className='emp-table' >
                 <Table striped bordered hover>
                     <thead>
@@ -79,16 +92,6 @@ const Employee = () => {
 
                                         <td> {da.phone} </td>
                                         <td> <img style={{ width: "125px", }} src={`https://localhost:7217/${da.picture}`} alt="" /> </td>
-
-                                        {/* <td> {da.name} </td>
-                                <td> {da.address} </td>
-                                <td> {da.gender} </td>
-                                <td> {da.department.departmentName} </td>
-                                <td> {da.joiningDate} </td>
-                                <td> {da.joiningDate} </td>
-                                <td> {da.country.countryName} </td>
-                                <td> {da.state.stateName} </td>
-                                <td> {da.city.cityName} </td> */}
                                         <td>
                                             <Link href={`emp/edit/${da.id}`} className='btn btn-sm me-3 btn-success'> <FontAwesomeIcon icon={faPen} /> </Link>
                                             <Link href={`emp/details/${da.id}`} className='btn btn-sm me-3 btn-primary'> <FontAwesomeIcon icon={faEye} /> </Link>
@@ -109,26 +112,29 @@ const Employee = () => {
                     </tbody>
 
                 </Table>
+                <div className="text-end">
+                    <ReactPaginate
+                        previousLabel={"previous"}
+                        nextLabel={"next"}
+                        breakLabel={"..."}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName={"pagination justify-content-end"}
+                        pageClassName={"page-item"}
+                        pageLinkClassName={"page-link"}
+                        previousClassName={"page-item"}
+                        previousLinkClassName={"page-link"}
+                        nextClassName={"page-item"}
+                        nextLinkClassName={"page-link"}
+                        breakClassName={"page-item"}
+                        breakLinkClassName={"page-link"}
+                        activeClassName={"active"}
+                    />
+                </div>
             </div>
-            <ReactPaginate
-                previousLabel={"previous"}
-                nextLabel={"next"}
-                breakLabel={"..."}
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={3}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination justify-content-center"}
-                pageClassName={"page-item"}
-                pageLinkClassName={"page-link"}
-                previousClassName={"page-item"}
-                previousLinkClassName={"page-link"}
-                nextClassName={"page-item"}
-                nextLinkClassName={"page-link"}
-                breakClassName={"page-item"}
-                breakLinkClassName={"page-link"}
-                activeClassName={"active"}
-            />
+
         </div>
     );
 };

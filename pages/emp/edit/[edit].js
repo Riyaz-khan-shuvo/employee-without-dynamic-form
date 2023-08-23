@@ -107,47 +107,11 @@ const EditEmp = () => {
         e.preventDefault();
         try {
             const empData = new FormData(e.target)
-
             const addEmp = await updateEmployee(id, empData);
-            // e.target.reset()
             router.push("/emp")
         } catch (error) {
             console.error('Error adding country:', error);
         }
-
-
-        // e.preventDefault()
-        // const formData = new FormData();
-
-        // // Append properties of the employee object to the FormData
-        // formData.append("id", data.id)
-        // formData.append('firstName', data.firstName);
-        // formData.append('lastName', data.lastName);
-        // formData.append('email', data.email);
-        // formData.append('phone', data.phone);
-        // formData.append('dateOfBirth', data.dateOfBirth);
-        // formData.append('gender', data.gender);
-        // formData.append('ssc', data.ssc);
-        // formData.append('hsc', data.hsc);
-        // formData.append('bsc', data.bsc);
-        // formData.append('address', data.address);
-        // formData.append('zipCode', data.zipCode);
-        // formData.append('countryId', data.countryId);
-        // formData.append('stateId', data.stateId);
-        // formData.append('cityId', data.cityId);
-        // formData.append('pictureFile', data.pictureFile);
-        // // Append more properties as needed
-
-        // try {
-        //     // Perform the update with the FormData
-        //     const updatedData = await updateEmployee(id, formData);
-        //     console.log('Updated data:', updatedData);
-        //     // toast.success('Department has been updated successfully!');
-        //     router.push("/emp");
-        // } catch (error) {
-        //     console.error('Error updating data:', error);
-        // }
-
     }
 
 
