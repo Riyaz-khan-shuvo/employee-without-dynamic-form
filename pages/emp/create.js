@@ -6,6 +6,7 @@ import { getStates } from '@/services/apiService/state/state.service';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
+import defaultImage from "../../public/images/boxed-bg.jpg"
 import React, { useEffect, useState } from 'react';
 
 const CreateEmployee = () => {
@@ -14,6 +15,8 @@ const CreateEmployee = () => {
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
     const [formData, setFormData] = useState([])
+    const [imagePreviewUrl, setImagePreviewUrl] = useState('');
+
     const router = useRouter()
 
     useEffect(() => {
@@ -26,11 +29,21 @@ const CreateEmployee = () => {
     }, []);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, files } = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
+        if (type === 'file') {
+            const selectedImage = files[0];
+            if (selectedImage) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setImagePreviewUrl(e.target.result);
+                };
+                reader.readAsDataURL(selectedImage);
+            }
+        }
     }
 
     const loadState = async (e) => {
@@ -61,6 +74,7 @@ const CreateEmployee = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+
             const data = new FormData(e.target)
             const addEmp = await addEmployee(data);
             e.target.reset()
@@ -238,7 +252,16 @@ const CreateEmployee = () => {
                                                 <span className="text-danger field-validation-valid"></span>
                                             </div>
                                             <div className="mt-3 text-end">
-                                                {/* <img src="/admin-lte/img/boxed-bg.jpg" alt="img" id="UploadFile" className="img-thumbnail" style={{ width: "150px" }} /> */}
+                                                {imagePreviewUrl !== "" ?
+                                                    <div className="mt-3 text-end">
+                                                        <img
+                                                            src={imagePreviewUrl}
+                                                            alt="Uploaded"
+                                                            className="img-thumbnail"
+                                                            style={{ width: "150px" }}
+                                                        />
+                                                    </div> : <> <img src={`/images/boxed-bg.jpg`} alt="hi" style={{ width: "155px" }} /> </>
+                                                }
                                             </div>
                                         </div>
                                     </div>

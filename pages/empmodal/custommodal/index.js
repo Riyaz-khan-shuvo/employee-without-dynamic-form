@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
-
+import CustomModal from './custommodal';
 
 
 const Employee = () => {
@@ -60,19 +60,25 @@ const Employee = () => {
 
     }
 
+
+    let [show, setShow] = useState(false);
+
     return (
         <div className="emp-bg">
             <div className="my-3">
                 <div className="container">
-                 
                     <div className="card">
                         <div className="card-header">
+
+                            {
+                                show && <CustomModal show={show} setShow={setShow} />
+                            }
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div>
                                     <h1 className='display-6 mb-3'>Employee List</h1>
                                 </div>
                                 <div>
-                                    <Link className='btn btn-outline-primary btn-sm' href={"/emp/create"}> <FontAwesomeIcon icon={faPenToSquare} />  Add Employee</Link>
+                                    <Button onClick={() => setShow(true)} variant="outline-primary" size='sm'> <FontAwesomeIcon icon={faPenToSquare} />  Add Employee</Button>
                                 </div>
                             </div>
                         </div>
