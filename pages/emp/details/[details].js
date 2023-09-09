@@ -146,5 +146,4 @@ const EmpDetails = () => {
         </div>
     );
 };
-
 export default EmpDetails;

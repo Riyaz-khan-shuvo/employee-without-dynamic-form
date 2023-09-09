@@ -1,5 +1,6 @@
 import { getAllCountry, getCityByState, getStateByCountry } from '@/services/apiService/Common/Common.service';
 import { getSingleEmployee, updateEmployee } from '@/services/apiService/employee/employee.service';
+import { getStates } from '@/services/apiService/state/state.service';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
@@ -7,18 +8,40 @@ const EditEmp = () => {
     const [data, setData] = useState({});
     const [isLoading, setIsLoading] = useState(true)
     const [countries, setCountries] = useState([]);
+    const [country, setCountry] = useState();
+    const [state, setState] = useState();
     const [states, setStates] = useState([]);
+    const [city, setCity] = useState([]);
     const [cities, setCities] = useState([]);
-    const [formData, setFormData] = useState([])
     const router = useRouter()
+    let count = 0
     const id = router.query.edit;
     const [imagePreviewUrl, setImagePreviewUrl] = useState('');
+    const selectedState = (e) => {
+        setCountry(e.target.value);
+        loadState(e);
+      };
 
+      const selectedCity = (e)=>{
+        setCity(e.target.value)
+        loadCity(e)
+      }
     useEffect(() => {
         const getData = async (id) => {
             try {
                 const getAllData = await getSingleEmployee(id);
                 setData(getAllData);
+                if(!country&&country!=getAllData.countryId){
+                    setCountry(getAllData.countryId);
+                    const dataState = await getStateByCountry(getAllData.countryId);
+
+                    setStates(dataState);
+                }
+                if(!state&&state!=getAllData.stateId){
+                    setState(getAllData.stateId);
+                    const dataCity = await getCityByState(getAllData.stateId);
+                    setCities(dataCity);
+                }
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -33,10 +56,11 @@ const EditEmp = () => {
         };
         getCountryData();
 
-        // if (data.countryId != undefined && count==0) {
-        //     loadState(data.countryId)
-        //     count++;
-        // }
+        // const getAllState = async () => {
+        //     const getAllData = await getStates();
+        //     setStates(getAllData);
+        // };
+        // getAllState();
 
 
     }, [id]);
@@ -72,11 +96,16 @@ const EditEmp = () => {
     };
 
     const loadState = async (e) => {
-        handleChange(e)
+
         try {
+            if(country){
             const getAllData = await getStateByCountry(e.target.value);
 
             setStates(getAllData);
+            if (data.stateId) {
+                e.target.value = data.stateId;
+            }
+        }
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -94,10 +123,6 @@ const EditEmp = () => {
         }
     };
 
-
-
-
-    console.log(data);
     if (data.dateOfBirth != undefined) {
         var convertedDate = new Date(data.dateOfBirth).toISOString().split('T')[0];
     }
@@ -229,7 +254,8 @@ const EditEmp = () => {
                                                 <div className="row mb-2">
                                                     <label className="col-md-3 col-form-label" htmlFor="countryId">Country Name</label>
                                                     <div className="col-md-9">
-                                                        <select onChange={(e) => loadState(e)} className="form-control" name="countryId" value={data.countryId}>
+                                                        <select onChange={selectedState}
+                                                         className="form-control" name="countryId" value={country}>
                                                             <option value="">Select Country</option>
                                                             {
                                                                 countries.data != undefined && countries.data.map((cou, index) => <option value={cou.id} key={index}> {cou.name} </option>)
@@ -243,7 +269,7 @@ const EditEmp = () => {
                                                     <div className="col-md-9">
                                                         <select
                                                             value={data.stateId}
-                                                            onChange={(e) => loadCity(e)}
+                                                            onChange={(e) => selectedCity(e)}
                                                             className="form-control"
                                                             data-val="true"
                                                             name="stateId"
